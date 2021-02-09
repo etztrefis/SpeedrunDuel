@@ -9,12 +9,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+
+import static org.bukkit.Bukkit.getLogger;
 
 public class DuelPlayerCommand implements CommandExecutor {
     private final Plugin plugin;
     private final TeamManager teamManager;
     private final PlayerData playerData;
+    private Roles role;
 
     public DuelPlayerCommand(Plugin plugin, TeamManager teamManager, PlayerData playerData) {
         this.plugin = plugin;
@@ -25,52 +29,53 @@ public class DuelPlayerCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         try {
-            Player player = plugin.getServer().getPlayer(args[0]);
+            Player player = plugin.getServer().getPlayer(args[1]);
             if (player == null) {
-                sender.sendMessage("Could not find player " + args[0]);
-                return false;
+                sender.sendMessage("Could not find player " + args[1]);
             }
 
-            Roles role;
-            if (args[1].toUpperCase().equals("LAVA")) {
+            if (args[2].toUpperCase().equals("LAVA")) {
                 role = Roles.LAVA;
-            } else if (args[1].toUpperCase().equals("WATER")) {
+            } else if (args[2].toUpperCase().equals("WATER")) {
                 role = Roles.WATER;
             } else {
-                sender.sendMessage(ChatColor.RED + "Error: Usage of command is -  /duelPlayer <nickname> <team> [remove]");
-                return false;
+                sender.sendMessage(ChatColor.RED + "Error: teams only can be => lava or water");
             }
 
-            if (args[2].equals("remove")) {
+            if (args[0].equals("remove")) {
                 removePlayer(player, role);
                 if(role == Roles.LAVA){
                     sender.sendMessage(ChatColor.GOLD + "Removed player: " + player.getName() + " from " + role + " team.");
                 }else {
                     sender.sendMessage(ChatColor.AQUA + "Removed player: " + player.getName() + " from " + role + " team.");
                 }
-            } else {
+            } else if (args[0].equals("add")) {
                 addPlayer(player, role);
-                if(role == Roles.LAVA){
+                if (role == Roles.LAVA) {
                     sender.sendMessage(ChatColor.GOLD + "Added player: " + player.getName() + " to " + role + " team.");
-                }else {
+                } else {
                     sender.sendMessage(ChatColor.AQUA + "Added player: " + player.getName() + " to " + role + " team.");
                 }
             }
+
             return true;
         } catch (Exception error) {
-            sender.sendMessage(ChatColor.RED + "Error: Usage of command is -  /duelPlayer <nickname> <team> [remove]");
+            getLogger().info("Error " + error.getStackTrace());
+            sender.sendMessage(ChatColor.RED + "Error: Usage of command is - /duelPlayer [add|remove] <player> [lava|water]");
         }
-        return false;
+        return true;
     }
 
     private void addPlayer(Player player, Roles role) {
         playerData.setRole(player, role);
         teamManager.addPlayer(role, player);
         player.getInventory().remove(Material.COMPASS);
+        player.getInventory().addItem(new ItemStack(Material.COMPASS));
     }
 
     private void removePlayer(Player player, Roles role) {
         playerData.reset(player);
         teamManager.removePlayer(role, player);
+        player.getInventory().remove(Material.COMPASS);
     }
 }
