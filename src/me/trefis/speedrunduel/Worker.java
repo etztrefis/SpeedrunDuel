@@ -15,7 +15,7 @@ import java.util.Comparator;
 
 public class Worker implements Runnable {
     private final Plugin plugin;
-    private final me.trefis.speedrunduel.PlayerData playerData;
+    private final PlayerData playerData;
 
     public Worker(Plugin plugin, PlayerData playerData) {
         this.plugin = plugin;
@@ -32,6 +32,13 @@ public class Worker implements Runnable {
     private void updateCompass(Player player) {
         Player nearest = getNearest(player);
         PlayerInventory inv = player.getInventory();
+        for (int j = 0; j < inv.getSize(); j++) {
+            ItemStack stack = inv.getItem(j);
+            if (stack == null) continue;
+            if (stack.getType() != Material.COMPASS) continue;
+
+            stack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+        }
         if (nearest == null) {
             float angle = (float) (Math.random() * Math.PI * 2);
             float dx = (float) (Math.cos(angle) * 5);
@@ -39,7 +46,7 @@ public class Worker implements Runnable {
             player.setCompassTarget(player.getLocation().add(new Vector(dx, 0, dz)));
         } else {
             player.setCompassTarget(nearest.getLocation());
-            if(player.getWorld().getEnvironment() == nearest.getWorld().getEnvironment()){
+            if (player.getWorld().getEnvironment() == nearest.getWorld().getEnvironment()) {
                 for (int j = 0; j < inv.getSize(); j++) {
                     ItemStack stack = inv.getItem(j);
                     if (stack == null) continue;
