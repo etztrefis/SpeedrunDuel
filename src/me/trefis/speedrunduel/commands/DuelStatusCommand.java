@@ -12,11 +12,11 @@ import org.bukkit.plugin.Plugin;
 
 import static org.bukkit.Bukkit.getLogger;
 
-public class DuelStatus implements CommandExecutor {
+public class DuelStatusCommand implements CommandExecutor {
     private final PlayerData playerData;
     private final Plugin plugin;
 
-    public DuelStatus(Plugin plugin, PlayerData playerData) {
+    public DuelStatusCommand(Plugin plugin, PlayerData playerData) {
         this.playerData = playerData;
         this.plugin = plugin;
     }
