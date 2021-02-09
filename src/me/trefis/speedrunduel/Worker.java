@@ -1,7 +1,6 @@
 package me.trefis.speedrunduel;
 
 import me.trefis.speedrunduel.context.Roles;
-import org.apache.commons.lang.Validate;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -37,15 +36,14 @@ public class Worker implements Runnable {
             if (stack == null) continue;
             if (stack.getType() != Material.COMPASS) continue;
 
-            stack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
+            stack.addUnsafeEnchantment(Enchantment.LUCK, 1);
         }
-        if (nearest == null) {
+        if (nearest == null || nearest.getWorld().getEnvironment() != player.getWorld().getEnvironment()) {
             float angle = (float) (Math.random() * Math.PI * 2);
             float dx = (float) (Math.cos(angle) * 5);
             float dz = (float) (Math.sin(angle) * 5);
             player.setCompassTarget(player.getLocation().add(new Vector(dx, 0, dz)));
         } else {
-            player.setCompassTarget(nearest.getLocation());
             if (player.getWorld().getEnvironment() == nearest.getWorld().getEnvironment()) {
                 for (int j = 0; j < inv.getSize(); j++) {
                     ItemStack stack = inv.getItem(j);
@@ -55,7 +53,6 @@ public class Worker implements Runnable {
                     CompassMeta meta = (CompassMeta) stack.getItemMeta();
                     meta.setLodestone(nearest.getLocation());
                     meta.setLodestoneTracked(false);
-                    stack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
                     stack.setItemMeta(meta);
                 }
             }
