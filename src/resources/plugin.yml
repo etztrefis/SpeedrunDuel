@@ -1,0 +1,14 @@
+name: SpeedrunDuel
+version: 1.0
+main: me.trefis.speedrunduel.SpeedrunDuelPlugin
+author: trefis
+api-version: 1.16
+permissions:
+  speedrunner.use:
+    default: op
+commands:
+  speedrunner:
+    usage: /<command> <nickname> <team> [remove]
+    permission: speedrunner.use
+    permission-message: You dont have a permission to use this command.
+    description: Adds player to a specified group.

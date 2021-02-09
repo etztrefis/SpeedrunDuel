@@ -11,12 +11,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-public class DuelPlayer implements CommandExecutor {
+public class DuelPlayerCommand implements CommandExecutor {
     private final Plugin plugin;
     private final TeamManager teamManager;
     private final PlayerData playerData;
 
-    public DuelPlayer(Plugin plugin, TeamManager teamManager, PlayerData playerData) {
+    public DuelPlayerCommand(Plugin plugin, TeamManager teamManager, PlayerData playerData) {
         this.plugin = plugin;
         this.teamManager = teamManager;
         this.playerData = playerData;
