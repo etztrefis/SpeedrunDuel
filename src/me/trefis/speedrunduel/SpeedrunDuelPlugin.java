@@ -1,6 +1,7 @@
 package me.trefis.speedrunduel;
 
 import me.trefis.speedrunduel.commands.DuelPlayerCommand;
+import me.trefis.speedrunduel.commands.DuelStatus;
 import me.trefis.speedrunduel.events.Events;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,14 +17,16 @@ public class SpeedrunDuelPlugin extends JavaPlugin {
 
         Optional.ofNullable(getCommand("duelPlayer"))
                 .ifPresent(c -> c.setExecutor(new DuelPlayerCommand(this, manager, playerData)));
+        Optional.ofNullable(getCommand("duelStatus"))
+                .ifPresent(c -> c.setExecutor(new DuelStatus(this, playerData)));
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new Worker(this, playerData), 1, 1);
 
-        getLogger().info("Speedrunners vs viewers plugin started.");
+        getLogger().info("Speedrun duel plugin started.");
     }
 
     @Override
     public void onDisable(){
-        getLogger().info("Speedrunners vs viewers plugin stopped.");
+        getLogger().info("Speedrun duel plugin stopped.");
     }
 }
