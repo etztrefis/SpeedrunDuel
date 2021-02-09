@@ -4,11 +4,16 @@ main: me.trefis.speedrunduel.SpeedrunDuelPlugin
 author: trefis
 api-version: 1.16
 permissions:
-  speedrunner.use:
+  duelPlayer.use:
     default: op
 commands:
-  speedrunner:
-    usage: /<command> <nickname> <team> [remove]
-    permission: speedrunner.use
+  duelPlayer:
+    usage: /<command> [add|remove] <player> [lava|water]
+    permission: duelPlayer.use
     permission-message: You dont have a permission to use this command.
     description: Adds player to a specified group.
+  duelStatus:
+    usage: /duelStatus <player>
+    permission: duelPlayer.use
+    permission-message: You dont have a permission to use this command.
+    description: Shows current player's team.
