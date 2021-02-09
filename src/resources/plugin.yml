@@ -17,3 +17,8 @@ commands:
     permission: duelPlayer.use
     permission-message: You dont have a permission to use this command.
     description: Shows current player's team.
+  duelStart:
+    usage: /duelStart
+    permission: duelPlayer.use
+    permission-message: You dont have a permission to use this command.
+    description: Starts the duel timer.
