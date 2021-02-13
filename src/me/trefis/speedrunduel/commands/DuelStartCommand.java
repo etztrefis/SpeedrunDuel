@@ -5,6 +5,7 @@ import me.trefis.speedrunduel.TeamManager;
 import me.trefis.speedrunduel.context.Roles;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,20 +45,32 @@ public class DuelStartCommand implements CommandExecutor {
                     objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
                     Score s = objective.getScore("    ");
-                    Score s1 = objective.getScore("Time to " + ChatColor.RED + "" + ChatColor.BOLD + "BOG: " + ChatColor.RESET + secToMin(countdown) + ChatColor.MAGIC + " lul");
+                    Score s1 = objective.getScore("Time to " + ChatColor.RED + "" + ChatColor.BOLD + "BOG: " + ChatColor.RED + secToMin(countdown) + ChatColor.RESET + " ☠");
                     Score s2 = objective.getScore("   ");
                     Score s3 = objective.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "LAVA");
                     Score s4, s5;
 
                     if (playerData.getPlayersByRole(Roles.LAVA).size() == 2) {
-                        s4 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.LAVA).get(0).getName());
-                        s5 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.LAVA).get(1).getName());
+                        if (playerData.getPlayersByRole(Roles.LAVA).get(0).getGameMode() == GameMode.SURVIVAL) {
+                            s4 = objective.getScore(playerData.getPlayersByRole(Roles.LAVA).get(0).getName() + ChatColor.RESET + "" + ChatColor.GREEN + " ✔");
+                        } else {
+                            s4 = objective.getScore(ChatColor.GRAY + playerData.getPlayersByRole(Roles.LAVA).get(0).getName() + ChatColor.RESET + "" + ChatColor.RED + " ❌");
+                        }
+                        if (playerData.getPlayersByRole(Roles.LAVA).get(1).getGameMode() == GameMode.SURVIVAL) {
+                            s5 = objective.getScore(playerData.getPlayersByRole(Roles.LAVA).get(1).getName() + ChatColor.RESET + "" + ChatColor.GREEN + " ✔");
+                        } else {
+                            s5 = objective.getScore(ChatColor.GRAY + playerData.getPlayersByRole(Roles.LAVA).get(1).getName() + ChatColor.RESET + "" + ChatColor.RED + " ❌");
+                        }
                     } else if (playerData.getPlayersByRole(Roles.LAVA).size() == 1) {
-                        s4 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.LAVA).get(0).getName());
-                        s5 = objective.getScore("Player: null     ");
+                        if (playerData.getPlayersByRole(Roles.LAVA).get(0).getGameMode() == GameMode.SURVIVAL) {
+                            s4 = objective.getScore(playerData.getPlayersByRole(Roles.LAVA).get(0).getName() + ChatColor.RESET + "" + ChatColor.GREEN + " ✔");
+                        } else {
+                            s4 = objective.getScore(ChatColor.GRAY + playerData.getPlayersByRole(Roles.LAVA).get(0).getName() + ChatColor.RESET + "" + ChatColor.RED + " ❌");
+                        }
+                        s5 = objective.getScore(ChatColor.GRAY + "Player: null" + ChatColor.RED + " ❌" + "    ");
                     } else {
-                        s4 = objective.getScore("Player: null    ");
-                        s5 = objective.getScore("Player: null   ");
+                        s4 = objective.getScore(ChatColor.GRAY + "Player: null" + ChatColor.RED + " ❌" + "    ");
+                        s5 = objective.getScore(ChatColor.GRAY + "Player: null" + ChatColor.RED + " ❌" + "   ");
                     }
 
                     Score s6 = objective.getScore("  ");
@@ -65,14 +78,26 @@ public class DuelStartCommand implements CommandExecutor {
                     Score s8, s9;
 
                     if (playerData.getPlayersByRole(Roles.WATER).size() == 2) {
-                        s8 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.WATER).get(0).getName());
-                        s9 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.WATER).get(1).getName());
+                        if (playerData.getPlayersByRole(Roles.WATER).get(0).getGameMode() == GameMode.SURVIVAL) {
+                            s8 = objective.getScore(playerData.getPlayersByRole(Roles.WATER).get(0).getName() + ChatColor.RESET + "" + ChatColor.GREEN + " ✔");
+                        } else {
+                            s8 = objective.getScore(ChatColor.GRAY + playerData.getPlayersByRole(Roles.WATER).get(0).getName() + ChatColor.RESET + "" + ChatColor.RED + " ❌");
+                        }
+                        if (playerData.getPlayersByRole(Roles.WATER).get(1).getGameMode() == GameMode.SURVIVAL) {
+                            s9 = objective.getScore(playerData.getPlayersByRole(Roles.WATER).get(1).getName() + ChatColor.RESET + "" + ChatColor.GREEN + " ✔");
+                        } else {
+                            s9 = objective.getScore(ChatColor.GRAY + playerData.getPlayersByRole(Roles.WATER).get(1).getName() + ChatColor.RESET + "" + ChatColor.RED + " ❌");
+                        }
                     } else if (playerData.getPlayersByRole(Roles.WATER).size() == 1) {
-                        s8 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.WATER).get(0).getName());
-                        s9 = objective.getScore("Player: null  ");
+                        if (playerData.getPlayersByRole(Roles.WATER).get(0).getGameMode() == GameMode.SURVIVAL) {
+                            s8 = objective.getScore(playerData.getPlayersByRole(Roles.WATER).get(0).getName() + ChatColor.RESET + "" + ChatColor.GREEN + " ✔");
+                        } else {
+                            s8 = objective.getScore(ChatColor.GRAY + playerData.getPlayersByRole(Roles.WATER).get(0).getName() + ChatColor.RESET + "" + ChatColor.RED + " ❌");
+                        }
+                        s9 = objective.getScore(ChatColor.GRAY + "Player: null" + ChatColor.RED + " ❌" + "  ");
                     } else {
-                        s8 = objective.getScore("Player: null ");
-                        s9 = objective.getScore("Player: null");
+                        s8 = objective.getScore(ChatColor.GRAY + "Player: null" + ChatColor.RED + " ❌" + " ");
+                        s9 = objective.getScore(ChatColor.GRAY +  "Player: null" + ChatColor.RED + " ❌");
                     }
 
                     Score s10 = objective.getScore(" ");
@@ -90,7 +115,45 @@ public class DuelStartCommand implements CommandExecutor {
                     s10.setScore(1);
 
                     Bukkit.getOnlinePlayers().forEach(player -> player.setScoreboard(scoreboard));
+
+                    if (countdown == 60) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.YELLOW + "60 seconds before " + ChatColor.RED + "" + ChatColor.BOLD + "MEGALUL"));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
+                    if (countdown == 30) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.YELLOW + "30 seconds before " + ChatColor.RED + "" + ChatColor.BOLD + "MEGALUL"));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
+                    if (countdown == 15) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.YELLOW + "15 seconds before " + ChatColor.RED + "" + ChatColor.BOLD + "MEGALUL"));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
+                    if (countdown == 10) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.RED + "10 seconds before " + ChatColor.MAGIC + "if you see this we WON ZULUL"));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
+                    if (countdown == 5) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.RED + "5 seconds before " + ChatColor.MAGIC + "if you see this we WON ZULUL"));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
+                    if (countdown == 4) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.RED + "4 seconds..."));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
+                    if (countdown == 3) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.RED + "3 seconds..."));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
+                    if (countdown == 2) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.RED + "2 seconds..."));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
+                    if (countdown == 1) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.RED + "1 seconds..."));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
+                    }
                     if (countdown == 0) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.RED + "" + ChatColor.MAGIC + "MEGALUL" + ChatColor.RESET + ChatColor.RED + "" + ChatColor.BOLD + "TIME TO BOG MEGALUL" + ChatColor.RESET + ChatColor.MAGIC + "MEGALUL"));
                         Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.RED + "Я ебал твою папу", ChatColor.GREEN + "Привет!", 15, 15, 15));
                         Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
                         plugin.getServer().getScheduler().cancelTasks(plugin);
@@ -99,8 +162,8 @@ public class DuelStartCommand implements CommandExecutor {
             }, 0L, 20L);
 
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Game started!");
-                player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f);
+                player.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Duel started!");
+                player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f);
             }
         }
         return true;
