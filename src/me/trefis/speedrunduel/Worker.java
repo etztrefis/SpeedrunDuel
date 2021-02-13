@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.CompassMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
@@ -37,6 +38,8 @@ public class Worker implements Runnable {
             if (stack.getType() != Material.COMPASS) continue;
 
             stack.addUnsafeEnchantment(Enchantment.LUCK, 1);
+            ItemMeta meta = stack.getItemMeta();
+            meta.setDisplayName("forsenCD");
         }
         if (nearest == null || nearest.getWorld().getEnvironment() != player.getWorld().getEnvironment()) {
             float angle = (float) (Math.random() * Math.PI * 2);
