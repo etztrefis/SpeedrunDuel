@@ -3,6 +3,9 @@ package me.trefis.speedrunduel.commands;
 import me.trefis.speedrunduel.PlayerData;
 import me.trefis.speedrunduel.TeamManager;
 import me.trefis.speedrunduel.context.Roles;
+import me.trefis.speedrunduel.events.BogEvents;
+import me.trefis.speedrunduel.megalul.EndScoreboard;
+import me.trefis.speedrunduel.megalul.EndWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -22,7 +25,7 @@ public class DuelStartCommand implements CommandExecutor {
     private final PlayerData playerData;
     private final TeamManager teamManager;
     private final Plugin plugin;
-    public int countdown = 300; // 3600 in 1 hour
+    public int countdown = 1800; // 3600 in 1 hour
 
     public DuelStartCommand(Plugin plugin, TeamManager manager, PlayerData playerData) {
         this.playerData = playerData;
@@ -32,7 +35,7 @@ public class DuelStartCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String str, String[] args) {
-        if (countdown != 300) { //change this value
+        if (countdown != 1800) { //change this value
             sender.sendMessage(ChatColor.RED + "Duel already started. If duel ended, make sure you reload the server.");
         } else {
             Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
@@ -153,10 +156,10 @@ public class DuelStartCommand implements CommandExecutor {
                         Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 1.0f, 1.0f));
                     }
                     if (countdown == 0) {
-                        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(ChatColor.RED + "" + ChatColor.MAGIC + "MEGALUL" + ChatColor.RESET + ChatColor.RED + "" + ChatColor.BOLD + "TIME TO BOG MEGALUL" + ChatColor.RESET + ChatColor.MAGIC + "MEGALUL"));
-                        Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.RED + "Я ебал твою папу", ChatColor.GREEN + "Привет!", 15, 15, 15));
-                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
                         plugin.getServer().getScheduler().cancelTasks(plugin);
+                        plugin.getServer().getPluginManager().registerEvents(new BogEvents(playerData, teamManager, plugin), plugin);
+                        plugin.getServer().getScheduler().runTask(plugin, new EndWorker(plugin));
+                        plugin.getServer().getScheduler().runTask(plugin, new EndScoreboard(plugin, playerData));
                     }
                 }
             }, 0L, 20L);
@@ -174,7 +177,6 @@ public class DuelStartCommand implements CommandExecutor {
         int ss = i % 60;
         String m = (ms < 10 ? "0" : "") + ms;
         String s = (ss < 10 ? "0" : "") + ss;
-        String f = m + ":" + s;
-        return f;
+        return m + ":" + s;
     }
 }
