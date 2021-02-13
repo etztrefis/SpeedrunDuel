@@ -58,6 +58,13 @@ public class DuelPlayerCommand implements CommandExecutor {
                 }
             }
 
+            if(playerData.getRole(player) == Roles.LAVA){
+                player.setDisplayName(ChatColor.GOLD + player.getName());
+            }else if(playerData.getRole(player) == Roles.WATER){
+                player.setDisplayName(ChatColor.AQUA + player.getName());
+            }else{
+                player.setDisplayName(player.getName());
+            }
             return true;
         } catch (Exception error) {
             getLogger().info("Error " + error.getStackTrace());
