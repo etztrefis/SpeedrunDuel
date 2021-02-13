@@ -63,6 +63,13 @@ public class Events implements Listener {
             addPlayer(player, leaversMap.get(player.getUniqueId()));
             leaversMap.remove(player.getUniqueId());
         }
+        if(playerData.getRole(player) == Roles.LAVA || playerData.getRole(player) == Roles.WATER){
+            if(playerData.getRole(player) == Roles.LAVA){
+                player.setDisplayName(ChatColor.GOLD + player.getName());
+            }else if(playerData.getRole(player) == Roles.WATER){
+                player.setDisplayName(ChatColor.AQUA + player.getName());
+            }
+        }
         event.setJoinMessage(ChatColor.GREEN + player.getName() + " has joined.");
     }
 
