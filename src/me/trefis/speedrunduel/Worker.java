@@ -40,6 +40,7 @@ public class Worker implements Runnable {
             stack.addUnsafeEnchantment(Enchantment.LUCK, 1);
             ItemMeta meta = stack.getItemMeta();
             meta.setDisplayName("forsenCD");
+            stack.setItemMeta(meta);
         }
         if (nearest == null || nearest.getWorld().getEnvironment() != player.getWorld().getEnvironment()) {
             float angle = (float) (Math.random() * Math.PI * 2);
