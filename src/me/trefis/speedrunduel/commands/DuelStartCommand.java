@@ -31,76 +31,77 @@ public class DuelStartCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String str, String[] args) {
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            public void run() {
-                ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-                Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
-                Objective objective = scoreboard.registerNewObjective("main", "dummy", ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "SPEEDRUN DUEL");
-                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        if (countdown != 300) { //change this value
+            sender.sendMessage(ChatColor.RED + "Duel already started. If duel ended, make sure you reload the server.");
+        } else {
+            Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+                public void run() {
+                    countdown--;
 
-                Score s = objective.getScore("    ");
-                s.setScore(11);
-                Score s1 = objective.getScore("Time to BOG " + secToMin(countdown) + ChatColor.RED + "" + ChatColor.BOLD + "MEGALUL");
-                s1.setScore(10);
-                Score s2 = objective.getScore("   ");
-                s2.setScore(9);
-                Score s3 = objective.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "LAVA");
-                s3.setScore(8);
+                    ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+                    Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
+                    Objective objective = scoreboard.registerNewObjective("main", "dummy", ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "SPEEDRUN DUEL");
+                    objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-                Score s4;
-                Score s5;
-                Score s8;
-                Score s9;
+                    Score s = objective.getScore("    ");
+                    Score s1 = objective.getScore("Time to " + ChatColor.RED + "" + ChatColor.BOLD + "BOG: " + ChatColor.RESET + secToMin(countdown) + ChatColor.MAGIC + " lul");
+                    Score s2 = objective.getScore("   ");
+                    Score s3 = objective.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + "LAVA");
+                    Score s4, s5;
 
-                try {
-                    s4 = objective.getScore(playerData.getPlayersByRole(Roles.LAVA).get(0).getName());
-                } catch (Exception e) {
-                    s4 = objective.getScore("null");
+                    if (playerData.getPlayersByRole(Roles.LAVA).size() == 2) {
+                        s4 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.LAVA).get(0).getName());
+                        s5 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.LAVA).get(1).getName());
+                    } else if (playerData.getPlayersByRole(Roles.LAVA).size() == 1) {
+                        s4 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.LAVA).get(0).getName());
+                        s5 = objective.getScore("Player: null     ");
+                    } else {
+                        s4 = objective.getScore("Player: null    ");
+                        s5 = objective.getScore("Player: null   ");
+                    }
+
+                    Score s6 = objective.getScore("  ");
+                    Score s7 = objective.getScore(ChatColor.AQUA + "" + ChatColor.BOLD + "WATER");
+                    Score s8, s9;
+
+                    if (playerData.getPlayersByRole(Roles.WATER).size() == 2) {
+                        s8 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.WATER).get(0).getName());
+                        s9 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.WATER).get(1).getName());
+                    } else if (playerData.getPlayersByRole(Roles.WATER).size() == 1) {
+                        s8 = objective.getScore(ChatColor.UNDERLINE + playerData.getPlayersByRole(Roles.WATER).get(0).getName());
+                        s9 = objective.getScore("Player: null  ");
+                    } else {
+                        s8 = objective.getScore("Player: null ");
+                        s9 = objective.getScore("Player: null");
+                    }
+
+                    Score s10 = objective.getScore(" ");
+
+                    s.setScore(11);
+                    s1.setScore(10);
+                    s2.setScore(9);
+                    s3.setScore(8);
+                    s4.setScore(7);
+                    s5.setScore(6);
+                    s6.setScore(5);
+                    s7.setScore(4);
+                    s8.setScore(3);
+                    s9.setScore(2);
+                    s10.setScore(1);
+
+                    Bukkit.getOnlinePlayers().forEach(player -> player.setScoreboard(scoreboard));
+                    if (countdown == 0) {
+                        Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.RED + "Я ебал твою папу", ChatColor.GREEN + "Привет!", 15, 15, 15));
+                        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
+                        plugin.getServer().getScheduler().cancelTasks(plugin);
+                    }
                 }
+            }, 0L, 20L);
 
-                try {
-                    s5 = objective.getScore(playerData.getPlayersByRole(Roles.LAVA).get(1).getName());
-                } catch (Exception e) {
-                    s5 = objective.getScore("null");
-                }
-
-                s4.setScore(7);
-                s5.setScore(6);
-                Score s6 = objective.getScore("  ");
-                s6.setScore(5);
-                Score s7 = objective.getScore(ChatColor.AQUA + "" + ChatColor.BOLD + "WATER");
-                s7.setScore(4);
-
-                try {
-                    s8 = objective.getScore(playerData.getPlayersByRole(Roles.WATER).get(0).getName());
-                } catch (Exception e) {
-                    s8 = objective.getScore("null");
-                }
-
-                try {
-                    s9 = objective.getScore(playerData.getPlayersByRole(Roles.WATER).get(1).getName());
-                } catch (Exception e) {
-                    s9 = objective.getScore("null");
-                }
-
-                s8.setScore(3);
-                s9.setScore(2);
-                Score s10 = objective.getScore(" ");
-                s10.setScore(1);
-
-                Bukkit.getOnlinePlayers().forEach(player -> player.setScoreboard(scoreboard));
-                countdown--;
-                if (countdown == 0) {
-                    Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.RED + "Я ебал твою папу", ChatColor.GREEN + "Привет!", 15, 15, 15));
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
-                    plugin.getServer().getScheduler().cancelTasks(plugin);
-                }
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Game started!");
+                player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f);
             }
-        }, 0L, 20L);
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Game started!");
-            player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f);
         }
         return true;
     }
