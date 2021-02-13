@@ -24,14 +24,14 @@ import java.util.UUID;
 
 import static org.bukkit.Bukkit.getLogger;
 
-public class Events implements Listener {
+public class BogEvents implements Listener {
     private final PlayerData playerData;
     private final TeamManager teamManager;
     private final Plugin plugin;
     private HashMap<UUID, Integer> deathsMap = new HashMap<UUID, Integer>();
     private HashMap<UUID, Roles> leaversMap = new HashMap<UUID, Roles>();
 
-    public Events(PlayerData playerData, TeamManager teamManager, Plugin plugin) {
+    public BogEvents(PlayerData playerData, TeamManager teamManager, Plugin plugin) {
         this.playerData = playerData;
         this.teamManager = teamManager;
         this.plugin = plugin;
@@ -39,7 +39,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onDealDamage(EntityDamageByEntityEvent event) {
-        if(event.getEntity().getType() == EntityType.PLAYER && event.getDamager().getType() == EntityType.PLAYER) {
+        if (event.getEntity().getType() == EntityType.PLAYER && event.getDamager().getType() == EntityType.PLAYER) {
             try {
                 Player damager = (Player) event.getDamager();
                 Player entity = (Player) event.getEntity();
@@ -55,7 +55,7 @@ public class Events implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if(playerData.getRole(player) == Roles.LAVA || playerData.getRole(player) == Roles.WATER){
+        if (playerData.getRole(player) == Roles.LAVA || playerData.getRole(player) == Roles.WATER) {
             leaversMap.put(player.getUniqueId(), playerData.getRole(player));
             removePlayer(player, playerData.getRole(player));
         }
@@ -65,7 +65,7 @@ public class Events implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if(leaversMap.containsKey(player.getUniqueId())){
+        if (leaversMap.containsKey(player.getUniqueId())) {
             addPlayer(player, leaversMap.get(player.getUniqueId()));
             leaversMap.remove(player.getUniqueId());
         }
@@ -93,16 +93,8 @@ public class Events implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        event.getDrops().removeIf(i -> i.getType() == Material.COMPASS);
-
-        if (deathsMap.containsKey(event.getEntity().getUniqueId())) {
-            deathsMap.put(event.getEntity().getUniqueId(), deathsMap.get(event.getEntity().getUniqueId()) + 1);
-        } else {
-            deathsMap.put(event.getEntity().getUniqueId(), 1);
-        }
-        if (deathsMap.get(event.getEntity().getUniqueId()) == 3) {
-            event.getEntity().setGameMode(GameMode.SPECTATOR);
-        }
+        event.setDeathMessage(event.getDeathMessage() + ChatColor.RED + "" + ChatColor.BOLD +" FINAL KILL!");
+        event.getEntity().setGameMode(GameMode.SPECTATOR);
 
         if (playerData.getPlayersByRole(playerData.getRole(event.getEntity())).size() == 2) {
             if (playerData.getPlayersByRole(playerData.getRole(event.getEntity())).get(0).getGameMode() != GameMode.SURVIVAL &&
@@ -153,17 +145,17 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onDragonDeath(EntityDeathEvent event){
-        if(event.getEntity() instanceof EnderDragon){
+    public void onDragonDeath(EntityDeathEvent event) {
+        if (event.getEntity() instanceof EnderDragon) {
             LivingEntity dragon = event.getEntity();
             Player killer = dragon.getKiller();
             String team = String.valueOf(playerData.getRole(killer)).toUpperCase();
-            if(team.equals("LAVA")){
+            if (team.equals("LAVA")) {
                 Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + team + " WINS", ChatColor.WHITE + killer.getName() + " killed the dragon!", 15, 60, 15));
-            }else{
+            } else {
                 Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + team + " WINS", ChatColor.WHITE + killer.getName() + " killed the dragon!", 15, 60, 15));
             }
-            Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));;
+            Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));
             Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
             plugin.getServer().getScheduler().cancelTasks(plugin);
         }
