@@ -4,18 +4,18 @@ import me.trefis.speedrunduel.PlayerData;
 import me.trefis.speedrunduel.TeamManager;
 import me.trefis.speedrunduel.context.Roles;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -39,7 +39,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onDealDamage(EntityDamageByEntityEvent event) {
-        if(event.getEntity().getType() == EntityType.PLAYER && event.getDamager().getType() == EntityType.PLAYER) {
+        if (event.getEntity().getType() == EntityType.PLAYER && event.getDamager().getType() == EntityType.PLAYER) {
             try {
                 Player damager = (Player) event.getDamager();
                 Player entity = (Player) event.getEntity();
@@ -55,7 +55,7 @@ public class Events implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if(playerData.getRole(player) == Roles.LAVA || playerData.getRole(player) == Roles.WATER){
+        if (playerData.getRole(player) == Roles.LAVA || playerData.getRole(player) == Roles.WATER) {
             leaversMap.put(player.getUniqueId(), playerData.getRole(player));
             removePlayer(player, playerData.getRole(player));
         }
@@ -65,7 +65,7 @@ public class Events implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if(leaversMap.containsKey(player.getUniqueId())){
+        if (leaversMap.containsKey(player.getUniqueId())) {
             addPlayer(player, leaversMap.get(player.getUniqueId()));
             leaversMap.remove(player.getUniqueId());
         }
@@ -100,7 +100,7 @@ public class Events implements Listener {
         } else {
             deathsMap.put(event.getEntity().getUniqueId(), 1);
         }
-        if (deathsMap.get(event.getEntity().getUniqueId()) == 3) {
+        if (deathsMap.get(event.getEntity().getUniqueId()) == 100) {
             event.getEntity().setGameMode(GameMode.SPECTATOR);
         }
 
@@ -126,9 +126,10 @@ public class Events implements Listener {
                 Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));
                 Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
                 plugin.getServer().getScheduler().cancelTasks(plugin);
+                plugin.getServer().getPluginManager().disablePlugin(plugin);
             }
-        }else if(playerData.getPlayersByRole(playerData.getRole(event.getEntity())).size() == 1){
-            if(playerData.getPlayersByRole(playerData.getRole(event.getEntity())).get(0).getGameMode() != GameMode.SURVIVAL){
+        } else if (playerData.getPlayersByRole(playerData.getRole(event.getEntity())).size() == 1) {
+            if (playerData.getPlayersByRole(playerData.getRole(event.getEntity())).get(0).getGameMode() != GameMode.SURVIVAL) {
                 String team = String.valueOf(playerData.getRole(event.getEntity())).toUpperCase();
                 if (team.equals("LAVA")) {
                     Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + "WATER WINS", ChatColor.GOLD + "Team lava" + ChatColor.RED + " has been eliminated!", 15, 60, 15));
@@ -148,24 +149,44 @@ public class Events implements Listener {
                 Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));
                 Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
                 plugin.getServer().getScheduler().cancelTasks(plugin);
+                plugin.getServer().getPluginManager().disablePlugin(plugin);
             }
         }
     }
 
     @EventHandler
-    public void onDragonDeath(EntityDeathEvent event){
-        if(event.getEntity() instanceof EnderDragon){
+    public void onDragonDeath(EntityDeathEvent event) {
+        if (event.getEntity() instanceof EnderDragon) {
             LivingEntity dragon = event.getEntity();
             Player killer = dragon.getKiller();
             String team = String.valueOf(playerData.getRole(killer)).toUpperCase();
-            if(team.equals("LAVA")){
+            if (team.equals("LAVA")) {
                 Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.GOLD + "" + ChatColor.BOLD + team + " WINS", ChatColor.WHITE + killer.getName() + " killed the dragon!", 15, 60, 15));
-            }else{
+            } else {
                 Bukkit.getOnlinePlayers().forEach(player -> player.sendTitle(ChatColor.AQUA + "" + ChatColor.BOLD + team + " WINS", ChatColor.WHITE + killer.getName() + " killed the dragon!", 15, 60, 15));
             }
-            Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));;
+            Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));
             Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
             plugin.getServer().getScheduler().cancelTasks(plugin);
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
         }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getClickedBlock().toString().toLowerCase().contains("bed")) {
+                Block block = event.getClickedBlock();
+                if (block.getLocation().getWorld() == Bukkit.getWorld("world_the_end")) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onAdvancement(PlayerAdvancementDoneEvent event) {
+        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.5f, 5.0f));
     }
 }

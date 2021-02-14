@@ -4,15 +4,18 @@ import me.trefis.speedrunduel.PlayerData;
 import me.trefis.speedrunduel.TeamManager;
 import me.trefis.speedrunduel.context.Roles;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -118,6 +121,7 @@ public class BogEvents implements Listener {
                 Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));
                 Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
                 plugin.getServer().getScheduler().cancelTasks(plugin);
+                plugin.getServer().getPluginManager().disablePlugin(plugin);
             }
         }else if(playerData.getPlayersByRole(playerData.getRole(event.getEntity())).size() == 1){
             if(playerData.getPlayersByRole(playerData.getRole(event.getEntity())).get(0).getGameMode() != GameMode.SURVIVAL){
@@ -140,6 +144,7 @@ public class BogEvents implements Listener {
                 Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));
                 Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
                 plugin.getServer().getScheduler().cancelTasks(plugin);
+                plugin.getServer().getPluginManager().disablePlugin(plugin);
             }
         }
     }
@@ -158,6 +163,20 @@ public class BogEvents implements Listener {
             Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f));
             Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f));
             plugin.getServer().getScheduler().cancelTasks(plugin);
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getClickedBlock().toString().toLowerCase().contains("bed")) {
+                Block block = event.getClickedBlock();
+                if (block.getLocation().getWorld() == Bukkit.getWorld("world_the_end")) {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 }
