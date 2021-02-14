@@ -2,6 +2,7 @@ package me.trefis.speedrunduel.commands;
 
 import me.trefis.speedrunduel.PlayerData;
 import me.trefis.speedrunduel.TeamManager;
+import me.trefis.speedrunduel.config.DataConfig;
 import me.trefis.speedrunduel.context.Roles;
 import me.trefis.speedrunduel.events.BogEvents;
 import me.trefis.speedrunduel.events.Events;
@@ -18,15 +19,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.*;
 
-import java.util.ArrayList;
-
-import static org.bukkit.Bukkit.getLogger;
-
 public class DuelStartCommand implements CommandExecutor {
     private final PlayerData playerData;
     private final TeamManager teamManager;
     private final Plugin plugin;
-    public int countdown = 180; // 3600 in 1 hour
+    public int countdown = DataConfig.get().getInt("timer");
 
     public DuelStartCommand(Plugin plugin, TeamManager manager, PlayerData playerData) {
         this.playerData = playerData;
@@ -38,7 +35,7 @@ public class DuelStartCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String str, String[] args) {
         Bukkit.getServer().getPluginManager().registerEvents(new Events(playerData, teamManager, plugin), plugin);
 
-        if (countdown != 180) { //change this value
+        if (countdown != DataConfig.get().getInt("timer")) {
             sender.sendMessage(ChatColor.RED + "Duel already started. If duel ended, make sure you reload the server.");
         } else {
             Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {

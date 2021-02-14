@@ -3,7 +3,7 @@ package me.trefis.speedrunduel;
 import me.trefis.speedrunduel.commands.DuelPlayerCommand;
 import me.trefis.speedrunduel.commands.DuelStartCommand;
 import me.trefis.speedrunduel.commands.DuelStatusCommand;
-import me.trefis.speedrunduel.events.Events;
+import me.trefis.speedrunduel.config.DataConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Optional;
@@ -11,6 +11,14 @@ import java.util.Optional;
 public class SpeedrunDuelPlugin extends JavaPlugin {
     @Override
     public void onEnable(){
+        getConfig().options().copyDefaults();
+        saveConfig();
+
+        DataConfig.setup();
+        DataConfig.get().addDefault("timer", 3600);
+        DataConfig.get().options().copyDefaults(true);
+        DataConfig.save();
+
         TeamManager manager = new TeamManager(this);
         PlayerData playerData = new PlayerData();
 
