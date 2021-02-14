@@ -14,8 +14,6 @@ public class SpeedrunDuelPlugin extends JavaPlugin {
         TeamManager manager = new TeamManager(this);
         PlayerData playerData = new PlayerData();
 
-        getServer().getPluginManager().registerEvents(new Events(playerData, manager, this), this);
-
         Optional.ofNullable(getCommand("duelPlayer"))
                 .ifPresent(c -> c.setExecutor(new DuelPlayerCommand(this, manager, playerData)));
         Optional.ofNullable(getCommand("duelStatus"))
@@ -23,7 +21,7 @@ public class SpeedrunDuelPlugin extends JavaPlugin {
         Optional.ofNullable(getCommand("duelStart"))
                 .ifPresent(c -> c.setExecutor(new DuelStartCommand(this, manager, playerData)));
 
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new Worker(this, playerData), 1, 3 * 20L);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new Worker(this, playerData), 1, 35L);
 
         getLogger().info("Speedrun duel plugin started.");
     }
