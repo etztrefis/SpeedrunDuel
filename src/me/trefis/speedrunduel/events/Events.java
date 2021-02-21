@@ -4,6 +4,7 @@ import me.trefis.speedrunduel.PlayerData;
 import me.trefis.speedrunduel.TeamManager;
 import me.trefis.speedrunduel.context.Roles;
 import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EntityType;
@@ -187,6 +188,9 @@ public class Events implements Listener {
 
     @EventHandler
     public void onAdvancement(PlayerAdvancementDoneEvent event) {
-        Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.5f, 5.0f));
+        Advancement advancement = event.getAdvancement();
+        if(!advancement.getKey().toString().startsWith("minecraft:recipes")) {
+            Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.5f, 5.0f));
+        }
     }
 }
